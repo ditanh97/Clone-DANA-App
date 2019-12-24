@@ -250,7 +250,7 @@ exports.otpUsers = async (req, res) => {
       }
       res.json({
         status:'success',
-        message: 'new'
+        message: 'new'  /**dibagian if checkNumber ? 'old' : 'new' */
       })
 
     } else {
@@ -298,9 +298,12 @@ exports.checkNumber = async (req, res) => {
         status:'success',
         message: 'old',
       });
+      /**seharusnya kirim otp juga untuk nomor lama */
     } else {
       await this.otpUsers(req, res);
     }
+
+     /*await this.otpUsers(req, res) */
 
   } catch (error) {
     res.status(500).json({
