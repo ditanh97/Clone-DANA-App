@@ -463,21 +463,23 @@ exports.updateProfile = async (req, res) => {
       otp,
       id_vouchers
     } = req.body;
+    
 
     const image = req.file ?
       "/images/uploads/" + req.file.filename :
       "/images/avatar.png";
 
-    const users = await Users.findAll({
+    const user = await Users.findOne({
       attributes: ['id', 'name', 'image', 'refferal', 'pin', 'phone', 'balance', 'email', 'type_user', 'otp', 'id_vouchers'],
       where: {
         id
       }
     });
+   
 
-    if (users.length > 0) {
-      users.forEach(async user => {
-        await user.update({
+    if (user) {
+        console.log(user, 'ssusu')
+        const updateUser = await Users.update({
           name,
           image,
           refferal,
@@ -488,20 +490,30 @@ exports.updateProfile = async (req, res) => {
           type_user,
           otp,
           id_vouchers
-        });
-      });
+        }, {
+          where: {id}
+        })
+
+        if (updateUser) {
+          const updateUserData = await Users.findOne({
+            attributes: ['id', 'name', 'image', 'refferal', 'pin', 'phone', 'balance', 'email', 'type_user', 'otp', 'id_vouchers'],
+            where: {id},
+          })
+          res.json({
+            status:'success',
+            message: 'Users updated succesfully',
+            data: updateUserData
+          });
+        }
     }
 
-    res.json({
-      status:'success',
-      message: 'Users updated succesfully',
-      data: users
-    });
+
 
   } catch (error) {
     res.status(500).json({
       status:'error',
       message: 'Something goes wrong',
+      error: error,
       data: {}
     })
   }
