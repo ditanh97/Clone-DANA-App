@@ -465,7 +465,7 @@ exports.updateProfile = async (req, res) => {
     } = req.body;
     
 
-    const image = req.file ?
+    let image = req.file ?
       "/images/uploads/" + req.file.filename :
       "/images/avatar.png";
 
@@ -478,7 +478,9 @@ exports.updateProfile = async (req, res) => {
    
 
     if (user) {
-        console.log(user, 'ssusu')
+        if (user.dataValues.image !== "/images/avatar.png") {
+          image = user.dataValues.image
+        }
         const updateUser = await Users.update({
           name,
           image,

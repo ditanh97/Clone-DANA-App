@@ -14,7 +14,7 @@ router
 
   .get("/",usersController.getAllUsers)
   .get("/:id",usersController.getUsersbyId)
-  .put("/:id",usersController.updateProfile)
+  .put("/:id",upload.single("image"),usersController.updateProfile) //apa nama key untuk nampung file tersebut
 
 module.exports = router;
 
